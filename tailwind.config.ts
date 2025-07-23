@@ -61,6 +61,20 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Agricultural theme colors
+				wheat: {
+					primary: 'hsl(var(--wheat-primary))',
+					secondary: 'hsl(var(--wheat-secondary))'
+				},
+				earth: {
+					primary: 'hsl(var(--earth-primary))',
+					secondary: 'hsl(var(--earth-secondary))'
+				},
+				health: {
+					good: 'hsl(var(--health-good))',
+					warning: 'hsl(var(--health-warning))',
+					danger: 'hsl(var(--health-danger))'
 				}
 			},
 			borderRadius: {
