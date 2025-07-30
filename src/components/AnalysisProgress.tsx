@@ -32,7 +32,7 @@ export const AnalysisProgress: React.FC<AnalysisProgressProps> = ({
       generating: {
         icon: <Target className="h-6 w-6 animate-pulse" />,
         title: 'Generating Results',
-        description: 'Creating Grad-CAM++ visualizations and final report...'
+        description: 'Creating HSV visualizations and final report...'
       },
       complete: {
         icon: <Target className="h-6 w-6" />,

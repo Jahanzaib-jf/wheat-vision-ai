@@ -9,12 +9,12 @@ import { toast } from 'sonner';
 import heroImage from '@/assets/wheat-hero.jpg';
 
 interface AnalysisResult {
-  className: string;
-  confidence: number;
-  healthyPercentage: number;
-  infectedPercentage: number;
-  severity: 'low' | 'medium' | 'high';
-  resultImage?: string;
+  predicted_class: string;
+  healthy_percent: number;
+  infected_percent: number;
+  original_image: string;
+  mask_image: string;
+  highlighted_image: string;
 }
 
 const Index = () => {
@@ -37,46 +37,56 @@ const Index = () => {
     setAnalysisProgress(0);
   };
 
-  const simulateAnalysis = async () => {
+
+  const analyzeImage = async () => {
+    if (!selectedImage) return;
     setIsAnalyzing(true);
     setAnalysisProgress(0);
-    
-    // Simulate different stages of analysis
-    const stages = [
-      { stage: 'uploading' as const, duration: 1000, progress: 20 },
-      { stage: 'preprocessing' as const, duration: 1500, progress: 40 },
-      { stage: 'analyzing' as const, duration: 3000, progress: 80 },
-      { stage: 'generating' as const, duration: 1000, progress: 100 },
-    ];
+    setAnalysisStage('uploading');
+    try {
+      // Step 1: Uploading
+      setAnalysisProgress(20);
+      await new Promise(res => setTimeout(res, 500));
+      setAnalysisStage('preprocessing');
+      setAnalysisProgress(40);
+      await new Promise(res => setTimeout(res, 500));
+      setAnalysisStage('analyzing');
+      setAnalysisProgress(80);
+      await new Promise(res => setTimeout(res, 500));
+      setAnalysisStage('generating');
+      setAnalysisProgress(100);
+      await new Promise(res => setTimeout(res, 500));
 
-    for (const { stage, duration, progress } of stages) {
-      setAnalysisStage(stage);
-      
-      // Gradually increase progress during each stage
-      const steps = 20;
-      const stepDuration = duration / steps;
-      const startProgress = analysisProgress;
-      
-      for (let i = 0; i <= steps; i++) {
-        const currentProgress = startProgress + (progress - startProgress) * (i / steps);
-        setAnalysisProgress(currentProgress);
-        await new Promise(resolve => setTimeout(resolve, stepDuration));
-      }
+      // Prepare form data
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+
+      // Call backend
+      const response = await fetch('http://localhost:8000/analyze', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) throw new Error('Failed to analyze image');
+      const data = await response.json();
+      console.log('Backend response:', data);
+
+      // Map backend result to AnalysisResult
+      const result: AnalysisResult = {
+        predicted_class: data.predicted_class || 'Unknown',
+        healthy_percent: data.healthy_percent || 0,
+        infected_percent: data.infected_percent || 0,
+        original_image: data.original_image,
+        mask_image: data.mask_image,
+        highlighted_image: data.highlighted_image
+      };
+      setAnalysisStage('complete');
+      setAnalysisResult(result);
+      toast.success('Analysis completed successfully!');
+    } catch (err) {
+      toast.error('Failed to analyze image. Please try again.');
+    } finally {
+      setIsAnalyzing(false);
     }
-
-    // Simulate analysis result
-    const mockResult: AnalysisResult = {
-      className: 'Leaf Rust',
-      confidence: 0.94,
-      healthyPercentage: 72.3,
-      infectedPercentage: 27.7,
-      severity: 'medium',
-    };
-
-    setAnalysisStage('complete');
-    setAnalysisResult(mockResult);
-    setIsAnalyzing(false);
-    toast.success('Analysis completed successfully!');
   };
 
   const handleAnalyze = () => {
@@ -84,8 +94,7 @@ const Index = () => {
       toast.error('Please select an image first');
       return;
     }
-    
-    simulateAnalysis();
+    analyzeImage();
   };
 
   const resetAnalysis = () => {
@@ -114,7 +123,6 @@ const Index = () => {
 
           <AnalysisResults 
             result={analysisResult} 
-            originalImage={originalImageUrl}
           />
 
           <div className="flex justify-center">
@@ -171,7 +179,7 @@ const Index = () => {
               <div className="mx-auto p-3 rounded-full bg-accent/10 w-fit">
                 <Leaf className="h-6 w-6 text-accent" />
               </div>
-              <CardTitle className="text-lg">Grad-CAM++ Visualization</CardTitle>
+              <CardTitle className="text-lg">HSV Visualization</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">

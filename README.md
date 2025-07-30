@@ -1,12 +1,77 @@
-# Welcome to your Lovable project
+# WheatVision AI
 
-## Project info
+An AI-powered wheat leaf disease detection application.
 
-**URL**: https://lovable.dev/projects/32907303-ff20-4f92-8016-37ea1b99d5c0
+## Prerequisites
 
-## How can I edit this code?
+- Python 3.9 or higher
+- Node.js 14 or higher
+- Git (optional)
 
-There are several ways of editing your application.
+## Installation & Setup
+
+### Backend Setup
+
+1. Create a virtual environment (recommended):
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install Python dependencies:
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### Frontend Setup
+
+1. Install Node.js dependencies:
+```bash
+npm install
+```
+
+## Running the Application
+
+### Option 1: Using the Batch File (Windows)
+
+1. Double-click `start-project.bat`
+2. Wait for both servers to start
+3. Open your browser to the URL shown in the frontend window
+
+### Option 2: Manual Start
+
+1. Start the backend server:
+```bash
+cd backend
+uvicorn app:app --reload
+```
+
+2. In a new terminal, start the frontend:
+```bash
+npm run dev
+```
+
+3. Open your browser to http://localhost:5173 (or the URL shown in the terminal)
+
+## Troubleshooting
+
+If you encounter any issues:
+
+1. Make sure Python 3.9+ and Node.js are installed
+2. Try creating a fresh virtual environment
+3. Make sure all dependencies are installed
+4. Check if the ports (8000 for backend, 5173 for frontend) are available
+
+## Version Information
+
+- Python: 3.9 or higher
+- Node.js: 14 or higher
+- Key Dependencies:
+  - FastAPI: 0.115.12
+  - Uvicorn: 0.24.0
+  - PyTorch: 2.0.1
+  - timm: 0.6.13
 
 **Use Lovable**
 
